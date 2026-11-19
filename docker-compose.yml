@@ -1,0 +1,19 @@
+services:
+  github-runner:
+    image: myoung34/github-runner:latest
+    container_name: quickbite-restaurant-runner
+    restart: unless-stopped
+    environment:
+      REPO_URL: https://github.com/sangct257/quickbite-restaurant-service
+      RUNNER_NAME: quickbite-runner-01
+      RUNNER_TOKEN: BEACTZHHQLRG5SK4DDTDU3TK7ZZMU
+      RUNNER_WORKDIR: /tmp/runner/work
+      LABELS: self-hosted,linux,x64,quickbite-runner
+    volumes:
+      # Mount Docker socket của máy host để runner có quyền chạy lệnh docker build/run
+      - /var/run/docker.sock:/var/run/docker.sock
+      # Mount thư mục làm việc tạm của runner ra ngoài để lưu trữ & tái sử dụng cache
+      - runner-work:/tmp/runner/work
+
+volumes:
+  runner-work:
