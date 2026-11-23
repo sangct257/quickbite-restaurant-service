@@ -1,4 +1,4 @@
-name: Restaurant Service CI
+name: Test DooD Docker Build
 
 on:
   push:
@@ -6,21 +6,15 @@ on:
       - main
 
 jobs:
-  build:
-    name: Build on Self-Hosted Runner
-    runs-on: [self-hosted, quickbite-runner]
+  docker-check:
+    name: Verify Docker Socket (DooD)
+    runs-on: [self-hosted, dood-runner]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
+      - name: Check Docker Daemon connection
+        run: docker info
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x ./gradlew
-
-      - name: Build with Gradle
-        run: ./gradlew bootJar
+      - name: Build Docker Image
+        run: docker build -t quickbite-service:test .
